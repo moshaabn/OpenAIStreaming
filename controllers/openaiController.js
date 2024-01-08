@@ -32,6 +32,13 @@ let buffer = '';
 for await (const part of stream) {
   buffer += part.choices[0]?.delta.content || "";
   let lastChar = buffer[buffer.length - 1];
+  if(lastChar) {
+    if(lastChar.codePointAt(0) === ' '.codePointAt(0)){
+        console.log(buffer);
+        res.write(buffer);
+        buffer = '';
+    }
+  }
   if (lastChar === ' ' || lastChar === '.' || lastChar === ',') {
     console.log(buffer);
     res.write(buffer);
