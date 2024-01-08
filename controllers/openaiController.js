@@ -23,14 +23,17 @@ export const getStreamingCompletion = async ({ userPrompt }) => {
 };
 
 export const getCompletion = async  (req, res) => {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
     const data = req.body;
     // const data = {userPrompt:"القوى العاملة فى السعودية اعطنى بعض الاحصائيات"}
   let starttime = Date.now();
-  const stream = await getStreamingCompletion({ userPrompt: data?.userPrompt });
+  const stream = await getStreamingCompletion({ userPrompt: data?.userPrompt|| "اعطنى 10 معلومات عن كأس العالم 2010" });
 
 let buffer = '';
 for await (const part of stream) {
-  buffer += part.choices[0]?.delta.content || "";
+  if (part.choices[0]?.delta.content) {
+    buffer += part.choices[0]?.delta.content;
+  }
   let lastChar = buffer[buffer.length - 1];
   if(lastChar) {
     if(lastChar.codePointAt(0) === ' '.codePointAt(0)){
